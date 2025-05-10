@@ -5,8 +5,10 @@ from ..database import get_db
 from ..models import User, UserCreate, UserRead
 from ..auth import get_password_hash
 
-router = APIRouter(tags=["authentication"])
+router = APIRouter(tags=["authentication"]) 
 
+
+# User registration endpoint
 @router.post("/register", response_model=UserRead)
 def register(user: UserCreate, db: Session = Depends(get_db)):
     # Check if email already exists
