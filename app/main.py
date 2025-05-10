@@ -1,6 +1,8 @@
 import uvicorn
 from fastapi import FastAPI
 
+from app.routes import todo
+
 from .database import create_db_and_tables
 
 from .routes import auth
@@ -11,7 +13,7 @@ app = FastAPI(title="Todo")
 
 
 app.include_router(auth.router) # Include the auth router for authentication endpoints
-
+app.include_router(todo.router)
 
 @app.on_event("startup")
 def on_startup():
