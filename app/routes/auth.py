@@ -4,8 +4,8 @@ from fastapi.security import OAuth2PasswordRequestForm
 from sqlmodel import Session, select
 
 from ..database import get_db
-from ..models import User, UserCreate, UserRead
-from ..auth import get_password_hash
+from ..models import BlacklistedToken, User, UserCreate, UserRead
+from ..auth import ACCESS_TOKEN_EXPIRE_MINUTES, authenticate_user, create_access_token, get_current_user, get_password_hash
 
 router = APIRouter(tags=["authentication"]) 
 
@@ -31,3 +31,47 @@ def register(user: UserCreate, db: Session = Depends(get_db)):
     db.refresh(db_user)
     
     return db_user
+
+# User login endpoint
+@router.post("/token")
+def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
+    user = authenticate_user(db, form_data.username, form_data.password)
+    if not user:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Incorrect email or password",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+    
+    access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
+    access_token = create_access_token(
+        data={"sub": user.email}, expires_delta=access_token_expires
+    )
+    
+    return {"access_token": access_token, "token_type": "bearer"}
+
+@router.post("/token")
+def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
+    user = authenticate_user(db, form_data.username, form_data.password)
+    if not user:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Incorrect email or password",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+    
+    access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
+    access_token = create_access_token(
+        data={"sub": user.email}, expires_delta=access_token_expires
+    )
+    
+    return {"access_token": access_token, "token_type": "bearer"}
+
+# @router.post("/logout")
+# def logout(token: str = Depends(get_current_user), db: Session = Depends(get_db)):
+#     # Add token to blacklist
+#     blacklisted_token = BlacklistedToken(token=token)
+#     db.add(blacklisted_token)
+#     db.commit()
+    
+#     return {"detail": "Successfully logged out"}
