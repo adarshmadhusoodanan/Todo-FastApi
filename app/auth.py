@@ -25,7 +25,7 @@ if SECRET_KEY is None:
 ALGORITHM = os.getenv("ALGORITHM")
 if ALGORITHM is None:
     raise ValueError("ALGORITHM environment variable not set.")
-ACCESS_TOKEN_EXPIRE_MINUTES = "30"  
+ACCESS_TOKEN_EXPIRE_MINUTES = 30 
 
 # Security utilities
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
