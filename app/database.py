@@ -10,6 +10,8 @@ DATABASE_URL = os.getenv("DATABASE_URL")
 # Check if DATABASE_URL is set correctly
 if DATABASE_URL is None:
     raise ValueError("DATABASE_URL environment variable not set.")
+
+print(f"Connecting to database at {DATABASE_URL}")
 # Create SQLAlchemy engine
 engine = create_engine(DATABASE_URL, echo=True)
 

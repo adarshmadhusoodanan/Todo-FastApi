@@ -54,3 +54,10 @@ class Todo(TodoBase, table=True):
     
     user: Optional[User] = Relationship(back_populates="todos")
 
+# Model for blacklisted tokens
+class BlacklistedToken(SQLModel, table=True):
+    __tablename__ = "blacklisted_tokens"
+    
+    id: Optional[int] = Field(default=None, primary_key=True, index=True)
+    token: str = Field(unique=True, index=True)
+    blacklisted_on: datetime = Field(default_factory=datetime.utcnow)
