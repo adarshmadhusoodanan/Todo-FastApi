@@ -66,6 +66,8 @@ A Todo application with user authentication built with FastAPI and PostgreSQL.
 - `POST /todos/` - Create a new todo
 - `GET /todos/` - List user's todos
 - `GET /todos/{todo_id}` - Get a specific todo
+- `GET /done/{done_status}` - group by completed todo
+- `PATCH /{todo_id}/complete` - mark as completed
 - `PATCH /todos/{todo_id}` - edit a todo
 - `DELETE /todos/{todo_id}` - delete a todo
 
