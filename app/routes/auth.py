@@ -67,11 +67,11 @@ def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(), db:
     
     return {"access_token": access_token, "token_type": "bearer"}
 
-# @router.post("/logout")
-# def logout(token: str = Depends(get_current_user), db: Session = Depends(get_db)):
-#     # Add token to blacklist
-#     blacklisted_token = BlacklistedToken(token=token)
-#     db.add(blacklisted_token)
-#     db.commit()
+@router.post("/logout")
+def logout(token: str = Depends(get_current_user), db: Session = Depends(get_db)):
+    # Add token to blacklist
+    blacklisted_token = BlacklistedToken(token=token)
+    db.add(blacklisted_token)
+    db.commit()
     
-#     return {"detail": "Successfully logged out"}
+    return {"detail": "Successfully logged out"}

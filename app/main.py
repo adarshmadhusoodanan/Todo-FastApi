@@ -1,11 +1,9 @@
 import uvicorn
 from fastapi import FastAPI
 
-from app.routes import todo
-
 from .database import create_db_and_tables
 
-from .routes import auth
+from .routes import auth, todo
 
 
 # Create FastAPI app

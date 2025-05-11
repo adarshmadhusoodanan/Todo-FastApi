@@ -3,6 +3,8 @@ from typing import Optional, List
 from datetime import datetime
 from pydantic import EmailStr
 
+
+
 # Model schemas for User
 class UserBase(SQLModel):
     name: str
@@ -28,14 +30,19 @@ class TodoBase(SQLModel):
 class TodoCreate(TodoBase):
     pass
 
+
+
 class TodoRead(TodoBase):
     id: int
     user_id: int
+
+
 
 class TodoUpdate(SQLModel):
     description: Optional[str] = None
     deadline: Optional[datetime] = None
     done: Optional[bool] = None
+
 
 # Database models
 class User(UserBase, table=True):
@@ -53,6 +60,8 @@ class Todo(TodoBase, table=True):
     user_id: int = Field(foreign_key="users.id")
     
     user: Optional[User] = Relationship(back_populates="todos")
+
+
 
 # Model for blacklisted tokens
 class BlacklistedToken(SQLModel, table=True):
