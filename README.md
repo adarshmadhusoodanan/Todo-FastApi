@@ -27,7 +27,7 @@ A Todo application with user authentication built with FastAPI and PostgreSQL.
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/adarshmadhusoodanan/Todo-FastApi/blob/main/README.md
+   git clone https://github.com/adarshmadhusoodanan/Todo-FastApi
    cd Todo-FastApi
    ```
 
