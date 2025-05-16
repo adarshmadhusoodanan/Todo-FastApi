@@ -1,25 +1,18 @@
 import uvicorn
 from fastapi import FastAPI
 
-from .database import create_db_and_tables
+from app.api import routes
 
-from .routes import auth, todo
+from .db.database import create_db_and_tables
 
 
 # Create FastAPI app
-app = FastAPI(title="Todo")
+app = FastAPI(title="Todo", description="todo app built with fastapi")
 
 
-app.include_router(auth.router) # Include the auth router for authentication endpoints
-app.include_router(todo.router)
+app.include_router(routes.router)   
 
 @app.on_event("startup")
-def on_startup():
+async def on_startup():
     create_db_and_tables()
 
-@app.get("/")
-def root():
-    return {"message": "Hello, World!"}
-
-if __name__ == "__main__":
-    uvicorn.run("app.main:app", host="0.0.0.0", port=8000, reload=True)

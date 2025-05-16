@@ -16,10 +16,6 @@ class UserCreate(UserBase):
 class UserRead(UserBase):
     id: int
 
-class UserUpdate(SQLModel):
-    name: Optional[str] = None
-    email: Optional[EmailStr] = None
-    password: Optional[str] = None
 
 # Model schemas for Todo
 class TodoBase(SQLModel):

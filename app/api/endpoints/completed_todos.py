@@ -1,0 +1,33 @@
+
+
+
+from typing import List
+
+from fastapi import APIRouter, Depends
+from sqlmodel import Session, select
+
+from app.helper.auth import get_current_user
+from app.db.database import get_db
+from app.db.models import Todo, TodoRead , User
+
+
+router = APIRouter(prefix="/todos", tags=["todos"])
+
+
+
+@router.get("/done/{done_status}", response_model=List[TodoRead])
+def read_todos_by_status(
+    done_status: bool,
+    skip: int = 0,
+    limit: int = 100,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+    statement = (
+        select(Todo)
+        .where(Todo.user_id == current_user.id, Todo.done == done_status)
+        .offset(skip)
+        .limit(limit)
+    )
+    todos = db.exec(statement).all()
+    return todos
