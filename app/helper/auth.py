@@ -12,6 +12,7 @@ from datetime import datetime, timedelta
 from typing import Optional
 
 
+from app.db import models
 from app.db.database import get_db
 from app.db.models import User, BlacklistedToken
 
@@ -91,3 +92,46 @@ async def get_current_user(token: str = Depends(oauth2_scheme), db: Session = De
     if user is None:
         raise credentials_exception
     return user
+
+
+
+
+
+# Token verification (generic)
+def verify_token(token: str, credentials_exception, db: Session = None):
+    try:
+        if db:
+            blacklisted = db.exec(select(BlacklistedToken).where(BlacklistedToken.token == token)).first()
+            if blacklisted:
+                raise credentials_exception
+        
+        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        email: str = payload.get("sub")
+        if email is None:
+            raise credentials_exception
+        return email
+    except JWTError:
+        raise credentials_exception
+
+# WebSocket-safe version
+
+
+def get_current_user_from_token_ws(token: str, db: Session):
+    try:
+        blacklisted = db.exec(select(BlacklistedToken).where(BlacklistedToken.token == token)).first()
+        if blacklisted:
+            raise Exception("Token is blacklisted")
+        
+        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        email: str = payload.get("sub")
+        if not email:
+            raise Exception("Token missing subject")
+        
+        user = db.exec(select(User).where(User.email == email)).first()
+        if not user:
+            raise Exception("User not found")
+
+        return user
+    except JWTError as e:
+        raise Exception("Token decode error")
+
