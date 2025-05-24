@@ -1,7 +1,7 @@
 from fastapi import APIRouter
 
 
-from app.api.endpoints import completed_todos, create_todo, delete_todo, edit_todo, list_todos, login, logout, mark_todo, signup
+from app.api.endpoints import completed_todos, create_todo, delete_todo, edit_todo, list_todos, login, logout, mark_todo, signup, websocket
 
 
 router = APIRouter()
@@ -18,3 +18,5 @@ router.include_router(mark_todo.router)
 
 router.include_router(delete_todo.router)
 router.include_router(edit_todo.router)
+
+router.include_router(websocket.router)
